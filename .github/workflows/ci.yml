@@ -20,10 +20,11 @@ jobs:
     env:
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.3.3
         with:
           enable-cache: true
+          cache-suffix: python-${{ matrix.python }}
           cache-dependency-glob: '.agents/skills/scriptorium-epub/scripts/*.py'
       - name: Run pytest functions (no Docker or external services)
         run: >-
