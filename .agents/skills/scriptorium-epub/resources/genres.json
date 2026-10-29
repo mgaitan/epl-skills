@@ -1,0 +1,267 @@
+{
+  "fuente": {
+    "obra": "Aprende a maquetar I: Manual básico",
+    "revision": "r3.1",
+    "archivo_original": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+    "capitulo": "3.1.5",
+    "xhtml": "OEBPS/Text/3.1.5.Generos.xhtml"
+  },
+  "reglas": {
+    "texto_fuente": [
+      "Para facilitar la organización de los libros tanto en nuestra web como en programas como Calibre, hemos desarrollado una guía de los distintos géneros y subgéneros disponibles para nuestros ePubs. Todos los libros deben estar catalogados como mínimo con un tipo, un género, y entre uno y cinco subgéneros (en los metadatos no debe incluirse el tipo).",
+      "Al colocar estos géneros y subgéneros en los metadatos hemos de respetar la grafía con que aparecen aquí pues cualquier pequeño cambio (como una mayúscula / minúscula) puede ser interpretado por el gestor de libros como una palabra distinta y, por tanto, colocarlo en un grupo diferente del que se pretendía.",
+      "En los libros en otros idiomas, se utilizarán estos mismos géneros, en castellano, por uniformidad."
+    ],
+    "tipos_por_libro": 1,
+    "generos_por_libro": 1,
+    "subgeneros_por_libro": {
+      "minimo": 1,
+      "maximo": 5
+    },
+    "incluir_tipo_en_metadatos": false,
+    "separador_en_metadatos": ", ",
+    "idioma_de_las_etiquetas": "es",
+    "respetar_grafia_exacta": true
+  },
+  "estructura": "Los géneros y subgéneros se agrupan por tipo, sin asignaciones adicionales de subgénero a género. Solo nombre es una etiqueta de catalogación; descripcion conserva las explicaciones, ejemplos y excepciones del manual, no categorías adicionales.",
+  "tipos": [
+    {
+      "nombre": "Ficción",
+      "generos": [
+        {
+          "nombre": "Guion",
+          "descripcion": "Obra compuesta o adaptada para medios masivos (cine, televisión, radio, Internet)."
+        },
+        {
+          "nombre": "Novela",
+          "descripcion": "Obra narrativa en prosa, extensa y compleja, de sucesos imaginados y parecidos a la realidad."
+        },
+        {
+          "nombre": "Poesía",
+          "descripcion": "Obra lírica, usualmente en verso, con fines estético-emocionales."
+        },
+        {
+          "nombre": "Publicaciones periódicas",
+          "descripcion": "Todas aquellas publicaciones que se alarguen por un período de varios años de forma continuada, tales como revistas, periódicos, etc."
+        },
+        {
+          "nombre": "Relato",
+          "descripcion": "Obra narrativa en prosa, de menor extensión que la novela. Puede ser corta (Cuento) o mediana (Relato propiamente dicho)."
+        },
+        {
+          "nombre": "Teatro",
+          "descripcion": "Obra compuesta para ser representada en un escenario, ante público."
+        }
+      ],
+      "subgeneros": [
+        {
+          "nombre": "Aventuras",
+          "descripcion": "Narra sucesos fuera de lo común, a menudo en escenarios exóticos. Incluye Acción, Exploradores, Piratas, Viajeros, Western."
+        },
+        {
+          "nombre": "Bélico",
+          "descripcion": "Trata de campañas, batallas o guerras. Suele presentar con detalle estrategias militares (reales o verosímiles)."
+        },
+        {
+          "nombre": "Ciencia ficción",
+          "descripcion": "Explora el impacto de posibles avances científicos, tecnológicos, sociales o culturales (presentes o futuros), sobre la sociedad o los individuos."
+        },
+        {
+          "nombre": "Didáctico",
+          "descripcion": "Con clara intención de dejar una enseñanza. Incluye Fábulas, Parábolas."
+        },
+        {
+          "nombre": "Drama",
+          "descripcion": "Narra hechos que conmueven al lector, usualmente desembocando en un final trágico. Incluye, por supuesto, Tragedia."
+        },
+        {
+          "nombre": "Erótico",
+          "descripcion": "Se relaciona directamente con la sensualidad y el sexo, presentándolos de forma implícita o explícita."
+        },
+        {
+          "nombre": "Fantástico",
+          "descripcion": "Utiliza la magia y otras formas sobrenaturales como un elemento primario del argumento, la temática o el ambiente. Incluye Mitología."
+        },
+        {
+          "nombre": "Filosófico",
+          "descripcion": "Una parte significativa de la obra se dedica a la filosofía discursiva (en temas como la función y el papel de la sociedad, el propósito de la vida, la ética o la moral, el papel del arte en la vida humana y el rol de la experiencia o la razón en el desarrollo del conocimiento). Incluye Novela de ideas."
+        },
+        {
+          "nombre": "Histórico",
+          "descripcion": "Ofrece una visión verosímil de una época histórica (preferiblemente lejana). Suele utilizar acontecimientos verídicos aunque los personajes principales sean inventados."
+        },
+        {
+          "nombre": "Humor",
+          "descripcion": "Usa el absurdo, en personajes o situaciones, para provocar la hilaridad. Incluye Comedia."
+        },
+        {
+          "nombre": "Infantil",
+          "descripcion": "Dirigido a los niños. Incluye Cuentos de hadas."
+        },
+        {
+          "nombre": "Interactivo",
+          "descripcion": "Exige una participación más activa del lector, que puede escoger varios «caminos» argumentales."
+        },
+        {
+          "nombre": "Intriga",
+          "descripcion": "Las acciones se ejecutan con inteligencia y astucia, y ocultan acontecimientos importantes para suscitar interés y tensión en el lector. Incluye Misterio, Suspense."
+        },
+        {
+          "nombre": "Juvenil",
+          "descripcion": "Dirigido a adolescentes y jóvenes."
+        },
+        {
+          "nombre": "Policial",
+          "descripcion": "Su móvil principal es la resolución de un enigma, generalmente criminal, mediante procesos mentales (como la deducción). Incluye Novela negra, Espionaje."
+        },
+        {
+          "nombre": "Psicológico",
+          "descripcion": "Enfatiza la caracterización interior de sus personajes, sus motivos, circunstancias y acción interna. Usa técnicas como flujo de conciencia o monólogo interior."
+        },
+        {
+          "nombre": "Realista",
+          "descripcion": "Apela a recursos pseudo documentales, principalmente para denunciar una situación injusta (social o individual). Incluye Costumbrismo, Narrativa social."
+        },
+        {
+          "nombre": "Romántico",
+          "descripcion": "Su tema primordial es el amor y las relaciones de pareja. (No se trata del movimiento Romanticismo de los siglos XVIII y XIX)."
+        },
+        {
+          "nombre": "Sátira",
+          "descripcion": "A diferencia del mero humor, apela a la ironía y el sarcasmo, con propósito moralizador, lúdico o meramente burlesco. Incluye Parodia, Picaresca."
+        },
+        {
+          "nombre": "Terror",
+          "descripcion": "Busca provocar el espanto en el lector, frecuentemente a través de elementos paranormales. Incluye Gore, Gótico, Horror, Thriller."
+        },
+        {
+          "nombre": "Otros",
+          "descripcion": "De no ubicarse en ninguno de los subgéneros anteriores."
+        }
+      ]
+    },
+    {
+      "nombre": "No Ficción",
+      "generos": [
+        {
+          "nombre": "Crónica",
+          "descripcion": "Texto con estructura esencialmente cronológica, que suele emplear recursos literarios o periodísticos."
+        },
+        {
+          "nombre": "Divulgación",
+          "descripcion": "Texto informativo, sin excesivo rigor metodológico, que interpreta y hace accesible el conocimiento científico al público general."
+        },
+        {
+          "nombre": "Ensayo",
+          "descripcion": "Texto que presenta un punto de vista personal y subjetivo, sin aparato documental, de manera libre y asistemática y con voluntad de estilo."
+        },
+        {
+          "nombre": "Publicaciones periódicas",
+          "descripcion": "Todas aquellas publicaciones que se alarguen por un período de varios años de forma continuada, tales como revistas, periódicos, etc."
+        },
+        {
+          "nombre": "Referencia",
+          "descripcion": "Texto con rigor académico/científico y estructura sistematizada, normalmente dividida en apartados o lecciones."
+        }
+      ],
+      "subgeneros": [
+        {
+          "nombre": "Arte",
+          "descripcion": "(Arquitectura, Danza, Escultura, Música, Pintura…)"
+        },
+        {
+          "nombre": "Autoayuda",
+          "descripcion": "(Superación)"
+        },
+        {
+          "nombre": "Ciencias exactas",
+          "descripcion": "(Lógica, Matemática…)"
+        },
+        {
+          "nombre": "Ciencias naturales",
+          "descripcion": "(Astronomía, Biología, Geología, Geografía, Física, Química…)"
+        },
+        {
+          "nombre": "Ciencias sociales",
+          "descripcion": "(Administración, Antropología, Arqueología, Demografía, Derecho, Economía, Educación, Política, Sociología…). Excepciones, por popularidad: Historia, Psicología"
+        },
+        {
+          "nombre": "Comunicación",
+          "descripcion": "(Cine, Diseño gráfico, Espectáculo, Fotografía, Historieta, Lingüística, Periodismo, Publicidad, Televisión…)"
+        },
+        {
+          "nombre": "Crítica y teoría literaria",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Deportes y juegos",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Diccionarios y enciclopedias",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Espiritualidad",
+          "descripcion": "(Esoterismo, Religión)"
+        },
+        {
+          "nombre": "Filosofía",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Historia",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Hogar",
+          "descripcion": "(Bricolaje, Cocina, Decoración, Jardinería, Mascotas…)"
+        },
+        {
+          "nombre": "Humor",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Idiomas",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Manuales y cursos",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Memorias",
+          "descripcion": "(Autobiografía, Biografía, Cartas, Diarios…)"
+        },
+        {
+          "nombre": "Padres e hijos",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Psicología",
+          "descripcion": "(Psiquiatría…). Excepciones: Autoayuda, Sexualidad, Padres e hijos"
+        },
+        {
+          "nombre": "Salud y bienestar",
+          "descripcion": "(Medicina, Nutrición, Terapias alternativas…)"
+        },
+        {
+          "nombre": "Sexualidad",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Tecnología",
+          "descripcion": "(Electrónica, Industria, Informática, Telecomunicaciones…)"
+        },
+        {
+          "nombre": "Viajes",
+          "descripcion": ""
+        },
+        {
+          "nombre": "Otros",
+          "descripcion": "de no ubicarse en ninguno de los subgéneros anteriores."
+        }
+      ]
+    }
+  ]
+}

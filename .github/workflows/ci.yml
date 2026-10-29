@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.12', '3.15']
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: '.agents/skills/scriptorium-epub/scripts/*.py'
+      - name: Run pytest functions (no Docker or external services)
+        run: >-
+          uv run --isolated -p '${{ matrix.python }}'
+          --with=pytest --with='pillow>=13,<14'
+          pytest -p no:cacheprovider .agents/skills/scriptorium-epub/scripts -q

@@ -1,0 +1,468 @@
+[
+  {
+    "id": "I-3-3.3.2.1.ErrataOrtotipograficas-02",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.1.ErrataOrtotipograficas.xhtml",
+      "buscar": 2
+    },
+    "pattern": "estabá",
+    "description": "Localizar la grafía ejemplificada como errata de estaba.",
+    "scope": "text",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Búsqueda exacta, no regla morfológica; citas, nombres o reproducción diplomática requieren revisión.",
+    "replacement": "estaba",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.1.ErrataOrtotipograficas-03",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.1.ErrataOrtotipograficas.xhtml",
+      "buscar": 3
+    },
+    "pattern": "muías",
+    "description": "Señalar posible confusión OCR entre muías y mulas.",
+    "scope": "text",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "El propio manual reconoce que muías puede ser forma legítima del verbo muir. No sustituir sin contexto.",
+    "replacement": "mulas",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.1.ErrataOrtotipograficas-04",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.1.ErrataOrtotipograficas.xhtml",
+      "buscar": 4
+    },
+    "pattern": "(?<!i>|em>)(\\(N. de(.*?)\\))",
+    "description": "Revisar notas parentéticas N. de… para su posible composición en cursiva.",
+    "scope": "xhtml",
+    "kind": "regex",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "PCRE en Sigil según II §§2.05 y 4.01; versión/opciones no especificadas",
+    "caveat": "Literal del manual: N. tiene punto comodín no escapado; .*? no resuelve paréntesis anidados ni cruza LF sin DotAll. Solo excluye i>/em> inmediatamente antes: puede confundir cierres, ancestros y CSS. Lookbehind con ramas de longitud distinta: PCRE, no re de Python.",
+    "replacement": "<i>\\1</i>",
+    "stdlib_re_compatible": false,
+    "stdlib_re_skip_reason": "Omitir con Python stdlib re: look-behind requires fixed-width pattern. Conservar el patrón original; no adaptar ni tratar la omisión como ausencia de coincidencias."
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-01",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "buscar": 1
+    },
+    "pattern": "(?<!em>|i>)(miss|sir|lady)",
+    "description": "Ejemplo simplificado para localizar extranjerismos posiblemente sin cursiva.",
+    "scope": "xhtml",
+    "kind": "regex",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "PCRE en Sigil según II §§2.05 y 4.01; versión/opciones no especificadas",
+    "caveat": "Sin límites de palabra ni opción de mayúsculas: detecta fragmentos de otras palabras y omite Miss/Sir/Lady. No comprueba cursiva heredada, etiquetas con atributos o contexto lingüístico. Ramas de lookbehind de distinta longitud: no portable a re.",
+    "replacement": "<i>\\1</i>",
+    "stdlib_re_compatible": false,
+    "stdlib_re_skip_reason": "Omitir con Python stdlib re: look-behind requires fixed-width pattern. Conservar el patrón original; no adaptar ni tratar la omisión como ausencia de coincidencias."
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-02",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Caracteres especiales / Uso incorrecto"
+    },
+    "pattern": "...",
+    "description": "Tres puntos frente al símbolo único de puntos suspensivos.",
+    "scope": "text",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Búsqueda literal, no la regex ... de tres comodines. Revisar contexto matemático, código, reproducción del original y límites de secuencias de más puntos.",
+    "replacement": "…",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-03",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Caracteres especiales / Uso incorrecto"
+    },
+    "pattern": "\"",
+    "description": "Comillas dobles rectas en texto.",
+    "scope": "text",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "El manual permite su uso para segundos angulares; elegir angulares o inglesas según contexto, no reemplazo único. No buscar delimitadores de atributos.",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-04",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Caracteres especiales / Uso incorrecto"
+    },
+    "pattern": "'",
+    "description": "Comillas simples rectas en texto.",
+    "scope": "text",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "La sustitución depende de apertura o cierre; excepción expresa para minutos angulares. El uso como apóstrofo tiene una entrada contextual aparte. No buscar delimitadores de atributos.",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-05",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Caracteres especiales / Uso incorrecto"
+    },
+    "pattern": "º",
+    "description": "Posible ordinal masculino usado indebidamente para grados.",
+    "scope": "text",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "º es válido en ordinales; solo alerta contextual de grados.",
+    "replacement": "°",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-06",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Caracteres especiales / Uso incorrecto"
+    },
+    "pattern": "–",
+    "description": "Posible semirraya usada como signo menos.",
+    "scope": "text",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "– tiene usos tipográficos correctos; solo revisar si expresa resta o un negativo.",
+    "replacement": "−",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-07",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&hellip;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "…",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-08",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&mdash;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "—",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-09",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&ndash;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "–",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-10",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&minus;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "−",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-11",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&ordf;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "ª",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-12",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&ordm;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "º",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-13",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&deg;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "°",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-14",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&ldaquo;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios. Nombre erróneo publicado: no es entidad HTML estándar. Se conserva literalmente, sin cambiar a &laquo;/&raquo;.",
+    "replacement": "«",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-15",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&rdaquo;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios. Nombre erróneo publicado: no es entidad HTML estándar. Se conserva literalmente, sin cambiar a &laquo;/&raquo;.",
+    "replacement": "»",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-16",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&ldquo;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "“",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-17",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&rdquo;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "”",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-18",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&lsquo;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "‘",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-19",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Entidades HTML (códigos) vs. símbolos / tabla"
+    },
+    "pattern": "&rsquo;",
+    "description": "Tabla de equivalencia de entidad y símbolo publicada por el manual.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Detectar la representación léxica en XHTML, no el carácter ya decodificado. Preferencia editorial histórica por el símbolo; la entidad no implica por sí misma error visual. No tocar ejemplos de código ni escapes necesarios.",
+    "replacement": "’",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.1.ErrataOrtotipograficas-05",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.1.ErrataOrtotipograficas.xhtml",
+      "location": "Herramienta Búsquedas Guardadas / ejemplos en prosa"
+    },
+    "pattern": "&nbsp;",
+    "description": "La prosa propone representar la entidad por el carácter no separable U+00A0.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "El carácter del manual es NBSP, no U+0020. I §3.3.2.2 propone conservar el código: registrar representaciones, no forzar una ni perder la no separación.",
+    "replacement": " ",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "II-2-2.09.Fragmentos-01",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 02] Aprende a maquetar II Herramientas utiles [46603] (r3.0).epub",
+      "member": "OEBPS/Text/2.09.Fragmentos.xhtml",
+      "location": "Div. / recomendación de búsqueda final"
+    },
+    "pattern": "*",
+    "description": "Búsqueda final de asteriscos como marcadores de clases pendientes (ejemplo class=\"**\").",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "Es una búsqueda literal: * solo no es regex válida. Hay asteriscos legítimos en prosa y selectores CSS; no borrar ni completar automáticamente.",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "II-2-2.09.Fragmentos-02",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 02] Aprende a maquetar II Herramientas utiles [46603] (r3.0).epub",
+      "member": "OEBPS/Text/2.09.Fragmentos.xhtml",
+      "location": "Comentario"
+    },
+    "pattern": "<!-- NOTA DE ATENCIÓN, REVISAR O INSERTAR -->",
+    "description": "Fragmento de comentario utilizado como recordatorio durante la maquetación.",
+    "scope": "xhtml",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "El manual remite a la búsqueda externa 0.01 para localizarlo, pero no publica su regex. Esta cadena es el marcador literal mostrado, no una reconstrucción de 0.01.",
+    "stdlib_re_compatible": true
+  },
+  {
+    "id": "I-3-3.3.2.2.ErroresTipograficos-23",
+    "source": {
+      "epub": "Proyecto Scriptorium - [Manual para maquetar libros electronicos 01] Aprende a maquetar I Manual basico [2398] (r3.1).epub",
+      "member": "OEBPS/Text/3.3.2.2.ErroresTipograficos.xhtml",
+      "location": "Caracteres especiales / Uso de apóstrofo recto"
+    },
+    "pattern": "'",
+    "description": "Apóstrofo recto frente a comilla simple curva de cierre.",
+    "scope": "text",
+    "kind": "literal",
+    "status": "alerta",
+    "automation": "conteo-y-revision",
+    "engine": "literal; no compilar como regex",
+    "caveat": "La propuesta de ’ se refiere solo al uso de apóstrofo. Una coincidencia de la misma cadena puede ser comilla de apertura/cierre o minuto angular; determinar función lingüística antes de sugerir cualquier cambio.",
+    "replacement": "’",
+    "stdlib_re_compatible": true
+  }
+]

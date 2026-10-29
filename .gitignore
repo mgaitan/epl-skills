@@ -1,0 +1,21 @@
+# Generated Python and tooling data
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+
+# Books and source artwork are not repository content.
+*.epub
+!.agents/skills/scriptorium-epub/resources/epub-base-epl-r2.1.epub
+*.psd
+*.pdf
+*.docx
+*.odt
+*.rtf
+/trabajo/
+
+# Local credentials and editor/OS state
+.env
+.env.*
+.DS_Store
