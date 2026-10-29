@@ -34,56 +34,32 @@ Las búsquedas siguientes producen **candidatos**, no sustituciones globales. Ad
 
 No apliques NFKC, eliminación de todos los caracteres invisibles o normalización de espacios a ciegas: pueden cambiar ligaduras, superíndices, signos y espaciados significativos. Si hace falta normalización Unicode, documenta y revisa sus efectos; no la uses como modernización encubierta. Mantén intactos los bloques protegidos de poesía, tablas, fórmulas y código.
 
-## 3. `dehyphen` opcional mediante uvx
+## 3. `dehyphen` opcional mediante el script incluido
 
-Consulta de **2026-10-29**: [`dehyphen==0.6.0`](https://pypi.org/project/dehyphen/0.6.0/) declara Python ≥3.10; esta receta usa el mínimo de la skill, **3.12**. Es experimental, principalmente orientada al alemán aunque ofrece modelos para español y otros idiomas. Usa modelos de lenguaje de caracteres para comparar formas de unir líneas/quitar guiones, además de apariciones de palabras en el documento. Una opción de menor perplejidad **no prueba la lectura de la fuente**, especialmente en variantes regionales o antiguas.
+Consulta de **2026-10-29**: [`dehyphen==0.6.0`](https://pypi.org/project/dehyphen/0.6.0/) declara Python ≥3.10; el script incluido usa el mínimo de la skill, **3.12**. Es experimental, principalmente orientada al alemán aunque ofrece modelos para español y otros idiomas. Usa modelos de lenguaje de caracteres para comparar formas de unir líneas/quitar guiones, además de apariciones de palabras en el documento. Una opción de menor perplejidad **no prueba la lectura de la fuente**, especialmente en variantes regionales o antiguas.
 
-- Es una **biblioteca sin CLI propia**: no recomendar `uvx dehyphen`. Usa `uvx --from dehyphen==0.6.0 python …`, sin instalación global.
+- Usa [`scripts/ocr_dehyphen.py`](../scripts/ocr_dehyphen.py), que importa la biblioteca y declara `dehyphen==0.6.0` mediante PEP 723. `uv run --script` gestiona el entorno y las dependencias sin instalación global.
 - En 0.6.0 la inferencia es local en CPU con numpy, sin PyTorch como dependencia. La primera ejecución puede descargar Python, paquetes y modelos; estos últimos se cachean normalmente en `~/.flair` o según la configuración del entorno. Prevé red, almacenamiento y tiempo de cómputo; no implica autorización para subir el texto a un servicio.
 - Selecciona el modelo del idioma real; no asumas que un modelo multilingüe cubre todos los idiomas ni que `fast=True` existe para todos. Verifica las opciones de la versión usada. Registra idioma/modelo, versión y parámetros.
 - Trabaja sobre **texto plano de prosa ya segmentado**, conservando renglones OCR y separando párrafos reales con líneas vacías. No pases XHTML/Markdown con marcas, versos, tablas o notas mezcladas. `text_to_format` interpreta los saltos como líneas y los blancos como separadores de párrafo; no descubre por sí solo la estructura impresa.
 - La salida es un **candidato externo al EPUB**. La herramienta también une líneas y normaliza su representación, y puede alterar guiones legítimos. Revisa el diff completo contra el facsímil antes de incorporar cambios individuales al texto de trabajo.
 - No uses `is_split_paragraph` para fusionar párrafos masivamente: esa decisión exige evidencia de continuidad entre páginas, no solo el modelo.
 
-### Receta para un fragmento de prosa en español
+### Uso para un fragmento de prosa en español
 
-Desde el directorio de trabajo, sustituye `fragmento-ocr.txt` por una muestra real UTF-8 de un mismo bloque de prosa, sin cabeceras/notas, y `revision-guiones-nueva` por un directorio inexistente. El destino no debe estar dentro del árbol que se empaquetará como EPUB. No ejecuta OCR ni corrige otros errores de reconocimiento.
+Ejemplo desde la raíz del checkout; si la skill se instaló en otra ubicación, resuelve la ruta del script desde su `SKILL.md`. Sustituye `fragmento-ocr.txt` por una muestra real UTF-8 de un mismo bloque de prosa, sin cabeceras/notas, y `revision-guiones-nueva` por un directorio inexistente cuyo padre ya exista. El destino no debe estar dentro del árbol que se empaquetará como EPUB. El script no ejecuta OCR ni corrige otros errores de reconocimiento.
 
 ```sh
-uvx --no-config --no-build --python 3.12 --from dehyphen==0.6.0 python - fragmento-ocr.txt revision-guiones-nueva <<'PY'
-from difflib import unified_diff
-from hashlib import sha256
-from importlib.metadata import version
-from pathlib import Path
-import json
-import sys
-from dehyphen import FlairScorer, format_to_text, text_to_format
-
-source, out = map(Path, sys.argv[1:])
-data = source.read_bytes()
-text = data.decode("utf-8")
-paragraphs = text_to_format(text)
-if not paragraphs:
-    raise SystemExit("No hay párrafos de prosa para revisar")
-out.mkdir(parents=True, exist_ok=False)
-scorer = FlairScorer(lang="es")
-candidate = format_to_text(scorer.dehyphen(paragraphs)) + "\n"
-(out / "candidato.txt").write_text(candidate, encoding="utf-8")
-diff = "".join(unified_diff(text.splitlines(keepends=True),
-                            candidate.splitlines(keepends=True),
-                            fromfile=str(source), tofile="candidato.txt"))
-(out / "cambios.diff").write_text(diff, encoding="utf-8")
-report = {"source": str(source.resolve()), "sha256": sha256(data).hexdigest(),
-          "dehyphen": version("dehyphen"), "lang": "es",
-          "forward": True, "backward": True, "fast": False,
-          "status": "candidato sin cotejar"}
-(out / "proveniencia.json").write_text(
-    json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-print(out.resolve())
-PY
+uv run -p 3.12 --script .agents/skills/scriptorium-epub/scripts/ocr_dehyphen.py fragmento-ocr.txt revision-guiones-nueva --lang es
 ```
 
-Se comprobó con uvx en Python 3.12 la instalación de 0.6.0, importación, firmas y conversión de formato sin cargar modelos. No se descargaron modelos ni se midió calidad de deshifenación; la receta de inferencia requiere una prueba piloto en el documento real. No prometer soporte en 3.15 ni resultados editoriales por ese smoke.
+`--lang` es obligatorio: indica el idioma/modelo real. Para modelos que solo tengan variante forward, añade `--forward-only`; no elijas un idioma distinto solo para evitar errores de descarga.
+
+La salida contiene `candidato.txt`, `cambios.diff` y `proveniencia.json` con hashes de entrada/candidato, versión de biblioteca y parámetros. El origen queda intacto; no se acepta ningún cambio automáticamente. Código **0** significa que se generó un candidato, no que el texto sea fiel ni esté validado; código **2** indica un error.
+
+El destino se crea **después** de terminar la carga del modelo y generar el candidato. Si esos pasos fallan, no deja un directorio vacío que bloquee reintentos. Si falla la escritura, elimina la salida creada por esa ejecución. Rechaza cualquier destino existente, incluidos enlaces simbólicos, sin modificarlo. Los modelos que la biblioteca haya descargado a su caché son independientes de esa salida.
+
+Los tests del script simulan la inferencia y los fallos de carga/escritura, sin red ni descarga de modelos; no miden calidad de deshifenación. La inferencia requiere una prueba piloto y cotejo en el documento real.
 
 ## 4. Si interviene un modelo de lenguaje
 

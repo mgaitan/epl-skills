@@ -116,7 +116,7 @@ Python mínimo **3.12**. Los tests son **funciones de pytest**, no `unittest`. D
 uv run --isolated -p 3.15 --with=pytest --with=pillow pytest .agents/skills/scriptorium-epub/scripts -q
 ```
 
-Pillow solo se necesita para portadas; auditor/navegación usan stdlib. El shebang y PEP 723 declaran dependencias por script para ejecución normal con `uv run --script`.
+Pillow solo se necesita para portadas; auditor/navegación usan stdlib. El script opcional `ocr_dehyphen.py` declara `dehyphen` vía PEP 723; sus tests simulan el modelo y no requieren esa biblioteca ni red. El shebang y PEP 723 declaran dependencias por script para ejecución normal con `uv run --script`.
 
 ## Entrega
 
