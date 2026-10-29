@@ -12,7 +12,7 @@ gh skills install mgaitan/epl-skills scriptorium-epub --allow-hidden-dirs --agen
 npx skills add mgaitan/epl-skills --skill scriptorium-epub
 ```
 
-Con GitHub CLI, `--scope user` instala para todos los proyectos; con npx, `-g`. `gh skills` está en preview. La instalación manual requiere copiar **toda** esta carpeta con sus recursos.
+Con GitHub CLI, `--scope user` instala para todos los proyectos; con npx, `-g`. `gh skills` está en preview. Para instalar manualmente, copiá el directorio completo `.agents/skills/scriptorium-epub/` —incluidos `SKILL.md`, scripts, referencias y recursos— a la ubicación de skills compatible con tu agente.
 
 ## Requisitos
 
