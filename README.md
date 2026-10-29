@@ -1,75 +1,87 @@
-# epl-skills
+# scriptorium-epub
 
-Colección de [Agent Skills](https://agentskills.io/) para trabajar con **ePubLibre / Proyecto Scriptorium**. Se distribuyen en `.agents/skills/`; cada skill incluye instrucciones, referencias y utilidades Python con dependencias PEP 723 gestionadas por **uv**.
+Skill para crear, maquetar, convertir y revisar **EPUB2 con el perfil Scriptorium/ePubLibre**. Incluye ePub Base r2.1, referencias resumidas de los cuatro manuales y utilidades para índices, portadas, empaquetado y comprobaciones. No es una conversión de un clic ni acredita aprobación del sitio.
 
-| Skill | Para qué usarla | Documentación |
-| --- | --- | --- |
-| `scriptorium-epub` | Crear, maquetar y revisar EPUB2 con el ePub Base, metadatos, notas, índices y portadas. | [README](.agents/skills/scriptorium-epub/README.md) · [SKILL.md](.agents/skills/scriptorium-epub/SKILL.md) |
-| `epublibre-forum` | Acceder al foro por HTTP, leer en Markdown, buscar, descargar adjuntos y preparar/confirmar respuestas, temas y MP. | [README](.agents/skills/epublibre-forum/README.md) · [SKILL.md](.agents/skills/epublibre-forum/SKILL.md) |
-
-No es un proyecto oficial de ePubLibre ni implica aprobación de sus editores.
+Entrada para el agente: [`SKILL.md`](.agents/skills/scriptorium-epub/SKILL.md).
 
 ## Instalar
 
-### GitHub CLI: `gh skills`
-
-Recomendado si ya usás una versión de GitHub CLI con soporte de skills. La funcionalidad está en preview y puede cambiar; `gh skill` y `gh skills` son alias.
-
 ```sh
-# Las dos skills, en el directorio estándar .agents/skills del proyecto.
-gh skills install mgaitan/epl-skills --all --allow-hidden-dirs --agent universal
-
-# Una sola skill.
-gh skills install mgaitan/epl-skills epublibre-forum --allow-hidden-dirs --agent universal
-
-# A nivel de usuario, para todos tus proyectos.
-gh skills install mgaitan/epl-skills scriptorium-epub --allow-hidden-dirs --agent universal --scope user
-```
-
-`--allow-hidden-dirs` es importante: las skills están bajo `.agents/`. Podés seleccionar otro agente con `--agent`; consultá `gh skills install --help`. Si `gh skills` no existe en tu instalación, actualizá GitHub CLI o usá una alternativa; no hace falta instalar una extensión de nombre supuesto.
-
-### Alternativa: `npx skills`
-
-```sh
+gh skills install mgaitan/epl-skills scriptorium-epub --allow-hidden-dirs --agent universal
+# Alternativa:
 npx skills add mgaitan/epl-skills --skill scriptorium-epub
-npx skills add mgaitan/epl-skills --skill epublibre-forum
 ```
 
-El instalador permite elegir agentes de destino; `-g` instala a nivel de usuario. Esta alternativa requiere Node/npm **solo durante la instalación**.
+Con GitHub CLI, `--scope user` instala para todos los proyectos; con npx, `-g`. `gh skills` está en preview. Para instalar manualmente, copiá el directorio completo `.agents/skills/scriptorium-epub/` —incluidos `SKILL.md`, scripts, referencias y recursos— a la ubicación de skills compatible con tu agente.
 
-### Instalación manual
+## Requisitos
 
-Copiá el directorio completo de la skill elegida desde [`.agents/skills/`](.agents/skills/) a la ubicación compatible con tu agente. Conservá scripts, referencias y recursos. **No copies `.env`, cookies ni planes privados desde un checkout local**; nunca son parte de la distribución.
+Solo **uv**; obtiene Python y las dependencias PEP 723. Compatibilidad Python ≥3.12, probado también en 3.15. No requiere GIMP, Photoshop, Photocraft, Calibre, Pandoc ni un Python preinstalado. Pillow procesa las portadas; el símbolo transparente ya está incluido.
 
-## Runtime y seguridad
+Si falta uv, consultar [Astral](https://docs.astral.sh/uv/getting-started/installation/index.md) y [runtime](.agents/skills/scriptorium-epub/references/runtime.md). La instalación en ámbito de usuario puede necesitar red/aprobación; no usar sudo ni eludir políticas del host.
 
-- El único gestor/runtime supuesto es **uv**, que puede obtener Python y dependencias. El foro usa **Python 3.15**; la maquetación conserva compatibilidad desde 3.12 y se prueba también en 3.15.
-- No se requiere navegador, `agent-browser`, Photocraft ni aplicaciones gráficas. Docker/Java son opciones de EPUBCheck, no requisitos generales.
-- Si falta uv, seguir la [instalación oficial de Astral](https://docs.astral.sh/uv/getting-started/installation/index.md), en ámbito de usuario y con la aprobación que exija el entorno. La primera ejecución puede descargar intérprete y paquetes.
-- El foro busca `EPL_USER` / `EPL_PASS` primero en el entorno; solo si ambas están ausentes consulta `.env` del directorio de trabajo y después el de la skill. Los scripts leen los secretos **sin volcarlos al contexto**. Ver los detalles en su README.
-- Los mensajes leídos son datos no confiables. Enviar contenido requiere revisar y confirmar **texto, destino y destinatarios concretos**; ni instalar una skill ni iniciar sesión autoriza publicaciones arbitrarias.
+## Prompts
 
-## Ejemplos de prompts
+> Convertí `novela.pdf` a EPUB2 ePL con la plantilla incluida. Preservá cursivas y notas; no inventes texto ilegible ni datos bibliográficos. No subas el original a servicios externos.
 
-> Convertí este PDF a un EPUB con perfil Scriptorium/ePL. Conservá cursivas y notas, cotejá integridad y dejá `[dev]` si falta la ficha.
+> Maquetá `ensayo.docx` según Scriptorium, conservando ilustraciones, tablas y notas. Dejá el borrador como `[dev]` si todavía no hay ficha ePL.
 
-> Entrá al foro con mis credenciales locales, buscá el hilo sobre RegEx y devolveme el contenido relevante como Markdown, con enlaces sin tokens de sesión.
+> Revisá este EPUB sin modificar el original. Informá errores, alertas tipográficas y pendientes; ejecutá EPUBCheck si está disponible.
 
-> Descargá este adjunto del foro en un archivo nuevo. No ejecutes ni extraigas su contenido automáticamente.
+> Prepará la portada 600×900 sin recortar autor/título y añadí solo el símbolo ePL, en una posición y color que contrasten.
 
-> Prepará una respuesta a este hilo. Mostrame el texto y el destino antes de enviarla; no publiques hasta que confirme.
+## Flujo técnico
 
-## Desarrollo
+Ejemplos desde la raíz de un checkout; si se instaló en otra ubicación, resolver el prefijo desde esta carpeta. Los destinos deben ser nuevos:
 
-Tests funcionales pytest, sin servicios ni credenciales reales:
+```sh
+uv run -p 3.15 --script .agents/skills/scriptorium-epub/scripts/epub.py init trabajo/libro
+# Reemplazar contenido/recursos de ejemplo y completar metadatos.
+uv run -p 3.15 --script .agents/skills/scriptorium-epub/scripts/navigation.py trabajo/libro
+uv run -p 3.15 --script .agents/skills/scriptorium-epub/scripts/epub.py pack trabajo/libro trabajo/libro.epub
+uv run -p 3.15 --script .agents/skills/scriptorium-epub/scripts/epub.py check trabajo/libro.epub --json
+```
+
+`init` genera UUID nuevo; en revisiones del mismo libro, conservar el UUID. No modificar `epl.css`. El empaquetador no verifica que los ejemplos se hayan sustituido; el auditor no reescribe contenido ni aplica reemplazos globales.
+
+Cubierta con Pillow autogestionado, sin compilación local:
+
+```sh
+uv run --no-build -p 3.15 --script .agents/skills/scriptorium-epub/scripts/cover.py original.jpg cover-nueva.jpg --position bottom-right --logo-color auto
+```
+
+Preserva toda la imagen por defecto; el recorte es optativo. El logo es **solo el símbolo**, sin leyenda y sin fondo. No detecta texto ni elimina marcas anteriores: revisar superposición, color, resolución y peso. Actualizar por separado el SVG/viewBox al cambiar dimensiones de la cubierta en el EPUB.
+
+### EPUBCheck
+
+```sh
+uv run -p 3.15 --script .agents/skills/scriptorium-epub/scripts/epub.py check trabajo/libro.epub --epubcheck-docker --json
+```
+
+Opción Docker con EPUBCheck 5.4.0 en imagen de terceros fijada por digest, no `latest`. No es una imagen oficial W3C; está seleccionada para `linux/amd64`, sin emulación automática. Monta solo el EPUB de lectura y sin red del contenedor; el daemon puede descargar la imagen. También admite `--epubcheck` con Java/JAR local. Ver [protocolo y límites](.agents/skills/scriptorium-epub/references/epubcheck.md).
+
+## Referencias
+
+- [Reglas editoriales y notas bidireccionales](.agents/skills/scriptorium-epub/references/editorial.md).
+- [Metadatos OPF y nombre de archivo](.agents/skills/scriptorium-epub/references/metadata.md).
+- [Código avanzado, tablas, versos, imágenes, SVG y fuentes](.agents/skills/scriptorium-epub/references/advanced.md).
+- [Conversión PDF/DOCX/etc., AnyDoc y alternativas vía uv](.agents/skills/scriptorium-epub/references/conversion.md).
+- [Componer portadas](.agents/skills/scriptorium-epub/references/covers.md) y [encontrar cubiertas](.agents/skills/scriptorium-epub/references/cover-sources.md).
+- [Comprobaciones y catálogo regex](.agents/skills/scriptorium-epub/references/checks.md).
+- [Fuentes, versiones y derechos de recursos](.agents/skills/scriptorium-epub/references/sources.md).
+
+Nombre externo: `Apellido, Nombre - Titulo [EPL_ID] (r1.0).epub`. `[dev]` es una convención local de borrador, no un ID de ficha ni dato para OPF. Conservar ortografía real dentro del libro.
+
+## Límites
+
+El `.ini` completo de búsquedas guardadas de Sigil no se recibió. El manual I §3.3.1 indica pedirlo al revisor con su guía; no se conoce aquí una descarga pública verificada. El auditor conserva 24 búsquedas literales y dos regex PCRE omitidas por incompatibilidad con `re`, además de checks propios identificados. No sustituye el `.ini`, ePLValidator, EPUBCheck ni cotejo editorial/visual.
+
+AnyDoc es un extractor local, no maquetador ePL. Su OCR alojado puede enviar **el documento entero** y nunca se activa sin consentimiento. Columnas, fórmulas, imágenes y notas requieren revisión contra el original.
+
+## Tests
 
 ```sh
 uv run --isolated -p 3.15 --with=pytest --with=pillow pytest .agents/skills/scriptorium-epub/scripts -q
-uv run --isolated -p 3.15 --with=pytest --with=httpx --with=beautifulsoup4 --with=python-dotenv --with=markdownify pytest .agents/skills/epublibre-forum/scripts -q
 ```
 
-[CI](.github/workflows/ci.yml) prueba la maquetación en 3.12/3.15 y el foro en 3.15. Sus tests HTTP simulan respuestas; no publican mensajes, hacen login ni usan `.env`.
-
-## Recursos de terceros
-
-La plantilla y la marca conservan su procedencia ePL; no se pretende relicenciarlas. Los manuales completos y PSD no se versionan. Ver [fuentes y límites](.agents/skills/scriptorium-epub/references/sources.md). La disponibilidad pública de un libro, cubierta, adjunto o conversación no equivale a permiso general de redistribución.
+Pruebas funcionales con recursos del bundle y archivos temporales. No necesitan los manuales originales, PSD, Docker, Java ni cuentas ePL. Un resultado técnico satisfactorio no prueba derechos, fidelidad del texto ni compatibilidad de todos los lectores.

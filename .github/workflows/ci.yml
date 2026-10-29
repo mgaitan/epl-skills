@@ -31,22 +31,3 @@ jobs:
           uv run --isolated -p '${{ matrix.python }}'
           --with=pytest --with='pillow>=13,<14'
           pytest -p no:cacheprovider .agents/skills/scriptorium-epub/scripts -q
-
-  forum:
-    name: Forum HTTP / Python 3.15
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    env:
-      PYTHONDONTWRITEBYTECODE: '1'
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.3.3
-        with:
-          enable-cache: true
-          cache-suffix: forum-python-3.15
-          cache-dependency-glob: '.agents/skills/epublibre-forum/scripts/*.py'
-      - name: Test HTTP protocol with synthetic credentials only
-        run: >-
-          uv run --isolated -p 3.15
-          --with=pytest --with=httpx --with=beautifulsoup4 --with=python-dotenv --with=markdownify
-          pytest -p no:cacheprovider .agents/skills/epublibre-forum/scripts -q
