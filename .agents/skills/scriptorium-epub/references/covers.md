@@ -28,6 +28,8 @@ Las ampliaciones generan aviso: no recuperan detalle. Un JPEG de más de **30000
 
 **Revisión visual imprescindible:** título/autor, superposición del símbolo, fondos mixtos, marcas previas, color y calidad/peso. No identifica ni elimina logos editoriales. Con cubierta 1200×1800, ajustar por separado el `viewBox` y dimensiones de la imagen SVG en `cubierta.xhtml`. No modificar `epl.css`.
 
+Si la cubierta de origen trae una marca editorial, no la tapes colocando encima el logo ePL. Retírala solo si puede restaurarse el fondo sin alterar título, autor u obra gráfica y si el uso de la cubierta lo permite; en fondos planos puede bastar una reparación local. Si no puede quitarse limpiamente, busca otra cubierta permitida o deja esa incidencia pendiente. Revisa la imagen final, no solo el informe de `cover.py`.
+
 ## Marca incluida y procedencia
 
 `../resources/epl-logo.png` contiene **solo el símbolo ePL, sin la leyenda «epubLibre» y sin fondo**: RGBA **471×314**, 19872 bytes; bbox alfa `(1, 1, 470, 313)`, cuatro bordes transparentes.

@@ -6,6 +6,7 @@
 - Conserva los originales sin modificar ni borrar. Trabaja en destinos nuevos, preferentemente fuera del proyecto; registra edición, SHA-256, herramienta/versión y correspondencia de páginas/pasajes.
 - **AnyDoc es extracción, no maquetación ePL**. Su Markdown GFM es un intermedio revisable, no un EPUB ni XHTML listo para el ePub Base. No confundir ausencia de excepciones con fidelidad editorial.
 - PDF textual: prueba primero capa de texto y orden de lectura. PDF escaneado/mixto: AnyDoc local **no hace OCR**; no encadenar automáticamente un servicio remoto.
+- MOBI/AZW: AnyDoc no anuncia estos formatos. Si `ebook-convert` de Calibre ya está instalado, puede producir un EPUB intermedio para extraer estructura y recursos; no instales Calibre silenciosamente ni entregues esa conversión sin reconstruirla sobre ePub Base. Revisa créditos y páginas finales para corregir metadatos internos incompletos o erróneos.
 - DOCX, DOC/RTF, ODT, HTML o EPUB de entrada: conservar estructura, énfasis y recursos verificables; no heredar sin revisión CSS, metadatos ni notas del origen. AnyDoc no anuncia HTML como formato de entrada.
 
 ## AnyDoc: binding Python y wheels
@@ -131,6 +132,7 @@ Herramientas del sistema **solo si están disponibles**: comprobar `shutil.which
 4. **Tablas/fórmulas**: cotejar filas, celdas combinadas, encabezados, unidades, signos, índices y fracciones. Markdown/LaTeX o HTML emitido no son soporte matemático ePL terminado; decidir XHTML/SVG/imagen accesible según `advanced.md` y comprobar en lectores.
 5. **Imágenes**: comparar cantidad, ubicación, alt/pies, resolución y recortes; mapear assets a `OEBPS/Images`, referencias XHTML y manifiesto OPF. No sustituir la ilustración por su alt ni borrar recursos sin investigar.
 6. **Notas**: reconstruir el **grafo ePL**, no copiar `[^1]` como texto: llamada con `id="rf1"` y enlace a `notas.xhtml#nt1`, destino `id="nt1"` y retorno al capítulo `#rf1`. Mapear `note_ref.note_id` a `Document.notes` cuando exista; verificar números, llamadas repetidas y párrafos completos. Ver `SKILL.md` y `editorial.md`.
+   - Al extraer MOBI con Calibre, inspecciona también superíndices Unicode (por ejemplo `¹`) en el cuerpo y marcadores de retorno como `[←1]` en las notas: el conversor puede conservarlos como texto plano y perder los hipervínculos. Vincula llamada y nota solo cuando el número y el contexto coincidan sin ambigüedad; si no, registra la incidencia y no adivines la ubicación.
 7. Adaptar solo contenido cotejado a una **copia del ePub Base**: capítulos XHTML, jerarquía real, `epl.css` intacto, estilos propios en `style.css`, metadatos y navegación. Seguir `metadata.md`, `advanced.md` y `checks.md`; generar índices, empaquetar y auditar con los scripts existentes, más EPUBCheck si disponible.
 8. Registrar externamente incertidumbres con página/pasaje, evidencia, decisión y pendiente: texto ilegible, nota sin destino, figura perdida o fórmula dudosa. No inventar soluciones, ocultar pérdidas ni introducir marcas de trabajo en el EPUB. Validación técnica no sustituye cotejo ni revisión visual.
 

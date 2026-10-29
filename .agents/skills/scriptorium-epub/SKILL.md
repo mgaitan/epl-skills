@@ -35,6 +35,7 @@ Lee `references/conversion.md` para elegir bibliotecas gestionadas por uv. AnyDo
 
 - **PDF textual**: comprueba la calidad y el orden de la capa de texto en páginas representativas. Extrae localmente con las herramientas disponibles; conserva correspondencia con páginas para cotejar. No asumas que el orden de extracción de columnas es el de lectura.
 - **PDF escaneado / imágenes**: usa OCR del idioma correcto. Comprueba orientación, dobles páginas, notas y caracteres dudosos contra la imagen. No envíes el contenido a servicios externos sin autorización.
+- **MOBI/AZW**: si Calibre ya está disponible, puede servir para extraer a un EPUB intermedio; no uses ese EPUB como entregable sin adaptarlo a la base. Contrasta sus metadatos con los créditos impresos/digitales de la obra.
 - **DOCX/RTF/ODT/HTML/EPUB**: importa texto, estructura, énfasis y recursos; trata su XHTML/CSS como material de entrada, no como maquetación ePL terminada. Texto plano exige reconstruir solo estructura verificable.
 - Retira cabeceras/pies y paginación impresa repetidos sin borrar texto significativo. Une líneas y deshace guiones de fin de línea solo con evidencia; preserva párrafos, diálogos, versos, énfasis, listas, notas y cambios de escena.
 - Coteja inicio/final y continuidad de todos los capítulos, pasajes ambiguos, llamadas de nota, ilustraciones y tablas. No sustituyas errores OCR con una reescritura plausible de la obra.
@@ -88,7 +89,7 @@ uv run --script .agents/skills/scriptorium-epub/scripts/navigation.py trabajo/li
 
 Nombra el entregable `Apellido, Nombre - Titulo [EPL_ID] (r1.0).epub`. Sin ficha se permite la **convención local** `[dev]` en el archivo, nunca como EPL-ID en OPF; no confundirla con norma de publicación ePL. Mantén tildes y nombres reales dentro del libro (`references/metadata.md`).
 
-El destino EPUB debe ser nuevo y estar **fuera** del directorio que se empaqueta:
+El destino EPUB debe ser nuevo y estar **fuera** del directorio que se empaqueta. Guarda también el informe externo fuera de ese directorio; `pack` empaqueta los archivos que encuentre allí y un informe suelto puede acabar dentro del EPUB:
 
 ```sh
 uv run --script .agents/skills/scriptorium-epub/scripts/epub.py pack trabajo/libro trabajo/libro.epub
