@@ -35,6 +35,7 @@ Lee `references/conversion.md` para elegir bibliotecas gestionadas por uv. AnyDo
 
 - **PDF textual**: comprueba la calidad y el orden de la capa de texto en páginas representativas. Extrae localmente con las herramientas disponibles; conserva correspondencia con páginas para cotejar. No asumas que el orden de extracción de columnas es el de lectura.
 - **PDF escaneado / imágenes**: usa OCR del idioma correcto. Comprueba orientación, dobles páginas, notas y caracteres dudosos contra la imagen. No envíes el contenido a servicios externos sin autorización.
+- **Solo si detectas OCR de baja calidad o se pide limpiar texto OCR**, consulta `references/ocr-cleanup.md`: guiones de corte, folios/cabeceras, segmentación y correcciones con cotejo. No la cargues como lectura inicial. La limpieza no autoriza modernizar, parafrasear, borrar variantes regionales/de época ni inventar texto ilegible.
 - **MOBI/AZW**: si Calibre ya está disponible, puede servir para extraer a un EPUB intermedio; no uses ese EPUB como entregable sin adaptarlo a la base. Contrasta sus metadatos con los créditos impresos/digitales de la obra.
 - **DOCX/RTF/ODT/HTML/EPUB**: importa texto, estructura, énfasis y recursos; trata su XHTML/CSS como material de entrada, no como maquetación ePL terminada. Texto plano exige reconstruir solo estructura verificable.
 - Retira cabeceras/pies y paginación impresa repetidos sin borrar texto significativo. Une líneas y deshace guiones de fin de línea solo con evidencia; preserva párrafos, diálogos, versos, énfasis, listas, notas y cambios de escena.
@@ -115,7 +116,7 @@ Python mínimo **3.12**. Los tests son **funciones de pytest**, no `unittest`. D
 uv run --isolated -p 3.15 --with=pytest --with=pillow pytest .agents/skills/scriptorium-epub/scripts -q
 ```
 
-Pillow solo se necesita para portadas; auditor/navegación usan stdlib. El shebang y PEP 723 declaran dependencias por script para ejecución normal con `uv run --script`.
+Pillow solo se necesita para portadas; auditor/navegación usan stdlib. El script opcional `ocr_dehyphen.py` declara `dehyphen` vía PEP 723; sus tests simulan el modelo y no requieren esa biblioteca ni red. El shebang y PEP 723 declaran dependencias por script para ejecución normal con `uv run --script`.
 
 ## Entrega
 
