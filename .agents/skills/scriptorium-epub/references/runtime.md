@@ -78,10 +78,12 @@ intérprete y cachés; no prometas funcionar sin red en un host recién instalad
   antes de elegirlos. No instalar aplicaciones de escritorio como requisito.
 - **OCR:** elegir deliberadamente backend local/modelos y sus recursos; no
   afirmar que instalar una biblioteca instala Tesseract o resuelve todo escaneo.
-- **EPUBCheck:** Docker o Java/JAR son opciones detectadas, no requisitos
-  generales. Ver `epubcheck.md`; no instalar Docker/daemon, Java global ni pedir
-  privilegios de administrador silenciosamente. Si no están disponibles y no se
-  autoriza instalarlos, informar EPUBCheck pendiente.
+- **EPUBCheck:** prioriza el JAR de la distribución oficial 5.4.0 cuando haya
+  Java utilizable; si no, usa Docker con cliente/daemon disponibles y autorizados.
+  Son opciones detectadas, no requisitos generales. Ver `epubcheck.md` para
+  descarga/verificación del ZIP oficial y dependencias del JAR. No instalar
+  Docker/daemon, Java global ni pedir privilegios de administrador silenciosamente.
+  Si no hay backend autorizado, informar EPUBCheck pendiente.
 
 Solo usa herramientas de sistema adicionales tras comprobar su disponibilidad.
 Para scripts nuevos, conserva Python ≥3.12, PEP 723 y `pathlib.Path` para todas

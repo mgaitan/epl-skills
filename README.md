@@ -54,11 +54,19 @@ Preserva toda la imagen por defecto; el recorte es optativo. El logo es **solo e
 
 ### EPUBCheck
 
+**Priorizar el JAR oficial si hay Java utilizable.** Obtener la [distribución oficial EPUBCheck 5.4.0](https://github.com/w3c/epubcheck/releases/download/v5.4.0/epubcheck-5.4.0.zip), verificarla y conservar su carpeta completa, incluido `lib/`. Ejemplo con la distribución extraída en `herramientas/`:
+
+```sh
+uv run -p 3.15 --script .agents/skills/scriptorium-epub/scripts/epub.py check trabajo/libro.epub --epubcheck herramientas/epubcheck-5.4.0/epubcheck.jar --json
+```
+
+**Si no hay Java utilizable**, usar Docker con cliente y daemon disponibles y autorizados:
+
 ```sh
 uv run -p 3.15 --script .agents/skills/scriptorium-epub/scripts/epub.py check trabajo/libro.epub --epubcheck-docker --json
 ```
 
-Opción Docker con EPUBCheck 5.4.0 en imagen de terceros fijada por digest, no `latest`. No es una imagen oficial W3C; está seleccionada para `linux/amd64`, sin emulación automática. Monta solo el EPUB de lectura y sin red del contenedor; el daemon puede descargar la imagen. También admite `--epubcheck` con Java/JAR local. Ver [protocolo y límites](.agents/skills/scriptorium-epub/references/epubcheck.md).
+Docker usa EPUBCheck 5.4.0 en una imagen de terceros fijada por digest, no `latest` ni una imagen oficial W3C. Está seleccionada para `linux/amd64`, sin emulación automática. Monta solo el EPUB de lectura y sin red del contenedor; el daemon puede descargar la imagen. La CLI no descarga el ZIP ni selecciona/cambia automáticamente el backend. Ver [protocolo, verificación y límites](.agents/skills/scriptorium-epub/references/epubcheck.md).
 
 ## Referencias
 
