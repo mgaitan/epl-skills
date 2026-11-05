@@ -403,6 +403,10 @@ class Audit:
                 "text/xml",
             ):
                 self.parse([target])
+            if media_type == "application/xhtml+xml" and target in self.documents:
+                doc = self.documents[target]
+                if doc.doctype != "html":
+                    self.error("XHTML_DOCTYPE", target, "Falta DOCTYPE html; usar la declaración XHTML 1.1 de la plantilla para evitar la limpieza al abrir en Sigil")
             expected = MEDIA.get(Path(target).suffix.lower())
             if expected and item.get("media-type") != expected:
                 self.error("MEDIA_TYPE", target, f"media-type esperado: {expected}")

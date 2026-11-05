@@ -142,6 +142,7 @@ class Document:
     data: bytes
     tree: ET.Element
     starts: dict[ET.Element, int]
+    doctype: str | None
 
 
 def parse_xml(path: Path, data: bytes) -> Document:
@@ -252,7 +253,7 @@ def parse_xml(path: Path, data: bytes) -> Document:
     elements = [element for element in tree.iter() if isinstance(element.tag, str)]
     if len(elements) != len(starts):
         fail(f"{path}: declaraciones XML no compatibles")
-    return Document(path, data, tree, dict(zip(elements, starts)))
+    return Document(path, data, tree, dict(zip(elements, starts)), dtd_name)
 
 
 def read_xml(path: Path, expected: str) -> Document:

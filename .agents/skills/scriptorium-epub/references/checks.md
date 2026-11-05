@@ -45,6 +45,12 @@ Son ejemplos publicados en I para notas `N. de…` y extranjerismos, respectivam
 | Marcas pendientes — II `2.09.Fragmentos.xhtml` | Asteriscos y comentario de atención pueden indicar trabajo pendiente. Un asterisco puede ser legítimo; la cadena del comentario es un marcador literal, no la regex oficial 0.01. |
 | Familias sin patrón publicado — I `3.3.2.1` y `3.3.2.2` citados | OCR, rayas, minúscula tras punto, romanos, siglas y cursiva requieren revisión; no inventar las regex oficiales ni presentar cobertura completa. Comparar énfasis, saltos de escena y estilos con la fuente. |
 
+## Apertura en Sigil y DOCTYPE
+
+- Comprueba que cada XHTML del manifiesto tenga DOCTYPE; para EPUB2 con esta base conserva la declaración XHTML 1.1 de la plantilla. Un XHTML XML bien formado sin DOCTYPE puede provocar que Sigil anuncie limpieza automática. EPUBCheck no sustituye esta comprobación.
+- El auditor informa `XHTML_DOCTYPE` si falta; no modifica el libro. Comprueba también `html`, `head` y `body`, y prueba la apertura en Sigil cuando esté disponible. Una declaración presente no garantiza ausencia de otros cambios automáticos.
+- Revisa las reglas de todas las CSS según los documentos donde se enlazan y elimina selectores sin uso, con la excepción de `epl.css`, que se conserva byte a byte. Incluye reglas por elemento, selectores compuestos, SVG y estilos generados; nunca concluyas que una regla sobra por buscar solo clases.
+
 ## Resumen de controles estructurales (sin regex inventadas)
 
 Fuentes: I `3.3.2.3.ErroresMaquetacion.xhtml`, `3.3.2.4.ErroresEPL.xhtml` y `3.4.5.CodigosError.xhtml`. Son requisitos de análisis estructural o revisión; no se reproducen los mensajes del validador.

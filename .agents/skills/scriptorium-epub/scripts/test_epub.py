@@ -123,7 +123,7 @@ def save_xml(files: dict[str, bytes], name: Path, root):
 
 
 def xhtml(title: str, body: str) -> bytes:
-    return f'<?xml version="1.0" encoding="utf-8"?>\n<html xmlns="{epub.XHTML}" xml:lang="es"><head><title>{title}</title>\n<link rel="stylesheet" type="text/css" href="../Styles/epl.css"/>\n</head><body>{body}</body></html>'.encode()
+    return f'<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE html>\n<html xmlns="{epub.XHTML}" xml:lang="es"><head><title>{title}</title>\n<link rel="stylesheet" type="text/css" href="../Styles/epl.css"/>\n</head><body>{body}</body></html>'.encode()
 
 
 def minimal_book(template_files) -> dict[str, bytes]:
@@ -953,7 +953,7 @@ def test_copy_entity_with_standard_xhtml_dtd_remains_accepted(template_files):
     files = minimal_book(template_files)
     data = files[CHAPTER.as_posix()].replace(b"</body>", b"<p>&copy;</p></body>")
     files[CHAPTER.as_posix()] = data.replace(
-        b"<html ", epub.nav.XHTML_DTD.encode() + b"\n<html ", 1
+        b"<!DOCTYPE html>", epub.nav.XHTML_DTD.encode(), 1
     )
     report = audit_report(files)
     assert report["counts"]["error"] == 0, report["findings"]
@@ -977,3 +977,9 @@ def test_parse_required_handles_txt_and_does_not_repeat_xml_errors():
 
 if __name__ == "__main__":
     raise SystemExit(pytest.main([str(Path(__file__).resolve()), *sys.argv[1:]]))
+
+
+def test_manifest_xhtml_without_doctype_is_reported(template_files):
+    files = minimal_book(template_files)
+    files[CHAPTER.as_posix()] = files[CHAPTER.as_posix()].replace(b"<!DOCTYPE html>\n", b"")
+    assert_finding(audit_report(files), "XHTML_DOCTYPE", file=CHAPTER)
