@@ -884,15 +884,26 @@ class Audit:
 
     def template_checks(self):
         template, _ = read_zip(TEMPLATE)
+        template_css = template["OEBPS/Styles/epl.css"]
         for name, data in self.files.items():
-            if (
-                Path(name).name == "epl.css"
-                and data != template["OEBPS/Styles/epl.css"]
-            ):
+            if Path(name).name == "epl.css" and data != template_css:
+                if (
+                    data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+                    == template_css.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+                ):
+                    message = (
+                        "epl.css solo difiere en finales de línea (CRLF/LF); "
+                        "restaurar los bytes exactos de la base r2.1"
+                    )
+                else:
+                    message = (
+                        "epl.css difiere byte a byte de la base r2.1 distribuida; "
+                        "restaurar el recurso original"
+                    )
                 self.error(
                     "EPL_CSS_CHANGED",
                     name,
-                    "epl.css difiere de la base r2.1 distribuida",
+                    message,
                 )
             if Path(name).name in ("cover.jpg", "autor.jpg") and data == template.get(
                 "OEBPS/Images/" + Path(name).name

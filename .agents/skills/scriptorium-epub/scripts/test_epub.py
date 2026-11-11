@@ -579,6 +579,14 @@ def test_changed_epl_css_is_an_error(template_files):
     assert_finding(audit_report(files), "EPL_CSS_CHANGED", file=name)
 
 
+def test_epl_css_line_ending_change_is_diagnosed(template_files):
+    files = minimal_book(template_files)
+    name = Path("OEBPS/Styles/epl.css")
+    files[name.as_posix()] = files[name.as_posix()].replace(b"\r\n", b"\n")
+    finding = assert_finding(audit_report(files), "EPL_CSS_CHANGED", file=name)[0]
+    assert "solo difiere en finales de línea" in finding["message"]
+
+
 def test_missing_manifest_resource(template_files):
     files = minimal_book(template_files)
     del files["OEBPS/Images/cover.jpg"]

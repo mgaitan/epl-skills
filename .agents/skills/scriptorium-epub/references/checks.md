@@ -16,7 +16,7 @@ Las citas de capítulos siguientes son miembros ZIP bajo `OEBPS/Text/`. Se inspe
 
 La única lista de patrones está en [`../resources/manual-regex.json`](../resources/manual-regex.json): **26 entradas, todas `status=alerta`**. Conserva IDs y patrones de la transcripción; no incluye tutoriales, contraejemplos ni recetas de transformación de notas.
 
-- **Solo alertar y revisar. Nunca autocorregir.** `replacement`, si existe, documenta la propuesta del manual; no autoriza ejecutarla. Fuente: I `3.3.1.RegEx.xhtml`.
+- **Solo alertar y revisar. Nunca autocorregir.** `replacement`, si existe, documenta la propuesta del manual; no autoriza ejecutarla. Una coincidencia confirmada en la fuente —por ejemplo, un nombre de usuario o código con tres puntos— se conserva y se anota como excepción revisada; no se altera el texto para obtener cero alertas. Fuente: I `3.3.1.RegEx.xhtml`.
 - `source` identifica EPUB, miembro y tabla Buscar (`buscar`, ordinal) o pasaje de prosa (`location`). `description` y `caveat` contienen intención y límites por entrada; no se duplican aquí.
 - Son **24 búsquedas literales y 2 regex originales PCRE/Sigil**. Para `kind=literal`, buscar literalmente o aplicar `re.escape(pattern)` antes de usar `re`; no compilar directamente cadenas como `...` o `*`.
 - `stdlib_re_compatible` indica si la búsqueda, despachada según `kind`, compila en `re`. No certifica que una coincidencia sea errata ni que se esté buscando en el ámbito correcto.
@@ -39,7 +39,7 @@ Son ejemplos publicados en I para notas `N. de…` y extranjerismos, respectivam
 | Grupo / fuente | Criterio operativo y falsos positivos |
 | --- | --- |
 | OCR y ortografía — I `3.3.2.1.ErrataOrtotipograficas.xhtml` | Revisar contexto y original. `muías` puede ser legítimo; diccionario del idioma y comparación de fuentes complementan las búsquedas. No confundir diferencias de edición/traducción con errores. |
-| Puntos, comillas y apóstrofos — I `3.3.2.2.ErroresTipograficos.xhtml` | Tres puntos, comillas rectas y apóstrofos son candidatos. Minutos/segundos angulares son excepciones expresas. Elegir apertura/cierre según contexto. Las dos alertas sobre `'` distinguen comilla y apóstrofo: no contar ambas como dos errores independientes. |
+| Puntos, comillas y apóstrofos — I `3.3.2.2.ErroresTipograficos.xhtml` | Tres puntos, comillas rectas y apóstrofos son candidatos, no errores automáticos. `...` en nombres, códigos u otros literales puede ser exacto en la fuente; conservarlo si se confirma. Minutos/segundos angulares son excepciones expresas. Elegir apertura/cierre según contexto. Las dos alertas sobre `'` distinguen comilla y apóstrofo: no contar ambas como dos errores independientes. |
 | Grados y signo menos — misma fuente | `º` es válido como ordinal y `–` tiene usos correctos. Revisar solo su posible confusión con grados o resta/negativos. |
 | Entidades — misma fuente | Preferencia editorial por símbolos, no error visual automático. No modificar ejemplos de código ni escapes necesarios; `&lt;`/`&gt;` no se sustituyen ciegamente. |
 | Marcas pendientes — II `2.09.Fragmentos.xhtml` | Asteriscos y comentario de atención pueden indicar trabajo pendiente. Un asterisco puede ser legítimo; la cadena del comentario es un marcador literal, no la regex oficial 0.01. |
