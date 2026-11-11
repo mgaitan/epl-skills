@@ -138,7 +138,7 @@ def minimal_book(template_files) -> dict[str, bytes]:
         "cubierta": '<div><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 600 900"><image xlink:href="../Images/cover.jpg" width="600" height="900"/></svg></div>',
         "sinopsis": '<div class="sinopsis"><p>Un viaje por el río.</p></div>',
         "titulo": '<p class="ttitulo">El río</p><p class="tautor">Ana Ruiz</p><p class="trevision">ePub r1.0</p>',
-        "info": "<p>Edición de prueba. Publicación original de 2020.</p>",
+        "info": '<div class="info"><p>Edición de prueba. Publicación original de 2020.</p></div>',
         "TOC": '<p><a href="capitulo.xhtml#inicio">El viaje</a></p>',
         "capitulo": '<h1 id="inicio">El viaje</h1><p>El río pasa junto al pueblo. <a id="rf1" href="notas.xhtml#nt1"><sup>[1]</sup></a></p>',
         "notas": '<h1>Notas</h1><p id="nt1">[1] Una aclaración. <a href="capitulo.xhtml#rf1">Volver</a></p>',
@@ -577,6 +577,13 @@ def test_changed_epl_css_is_an_error(template_files):
     name = Path("OEBPS/Styles/epl.css")
     files[name.as_posix()] += b"\n/* cambio */\n"
     assert_finding(audit_report(files), "EPL_CSS_CHANGED", file=name)
+
+
+def test_info_page_requires_base_container(template_files):
+    files = minimal_book(template_files)
+    name = Path("OEBPS/Text/info.xhtml")
+    files[name.as_posix()] = xhtml("Créditos", '<h1 id="epl-nav-1">Créditos</h1>')
+    assert_finding(audit_report(files), "INFO_STRUCTURE", file=name)
 
 
 def test_epl_css_line_ending_change_is_diagnosed(template_files):

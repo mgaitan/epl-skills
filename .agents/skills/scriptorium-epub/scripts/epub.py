@@ -608,6 +608,21 @@ class Audit:
             if doc is None:
                 continue
             base = Path(name).name
+            if base == "info.xhtml":
+                body = doc.tree.find(f"{{{XHTML}}}body")
+                info_blocks = []
+                if body is not None:
+                    info_blocks = [
+                        e
+                        for e in body.findall(f"{{{XHTML}}}div")
+                        if "info" in e.get("class", "").split()
+                    ]
+                if len(info_blocks) != 1:
+                    self.error(
+                        "INFO_STRUCTURE",
+                        name,
+                        'info.xhtml debe conservar el contenedor <div class="info"> de la base',
+                    )
             if base == "sinopsis.xhtml":
                 container = next(
                     (
