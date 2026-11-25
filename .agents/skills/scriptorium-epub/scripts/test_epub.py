@@ -23,6 +23,7 @@ import uuid
 import xml.etree.ElementTree as ET
 import zipfile
 from collections import Counter
+from hashlib import sha256
 from pathlib import Path
 
 import epub
@@ -147,6 +148,11 @@ def minimal_book(template_files) -> dict[str, bytes]:
         files[(Path("OEBPS/Text") / f"{name}.xhtml").as_posix()] = xhtml(
             name.capitalize(), body
         )
+    files["OEBPS/Styles/style.css"] = b"p { text-indent: 1em; }"
+    files[CHAPTER.as_posix()] = files[CHAPTER.as_posix()].replace(
+        b"</head>",
+        b'<link rel="stylesheet" type="text/css" href="../Styles/style.css"/></head>',
+    )
     package = ET.fromstring(template_files[OPF_NAME.as_posix()])
     metadata = package.find(f"{{{epub.OPF}}}metadata")
     for key, value in {
@@ -572,26 +578,27 @@ def test_two_incompatible_regex_are_explicitly_skipped_with_original_reasons(
     assert SKIPPED_REGEX.isdisjoint(f["code"] for f in report["findings"])
 
 
-def test_changed_epl_css_is_an_error(template_files):
+@pytest.mark.parametrize("line_endings_only", [False, True])
+def test_changed_epl_css_is_an_error(template_files, line_endings_only):
     files = minimal_book(template_files)
     name = Path("OEBPS/Styles/epl.css")
-    files[name.as_posix()] += b"\n/* cambio */\n"
-    assert_finding(audit_report(files), "EPL_CSS_CHANGED", file=name)
+    css = files[name.as_posix()]
+    files[name.as_posix()] = (
+        css.replace(b"\r\n", b"\n") if line_endings_only else css + b"\n/* cambio */\n"
+    )
+    [finding] = assert_finding(audit_report(files), "EPL_CSS_CHANGED", file=name)
+    assert (
+        "Solo cambiaron los finales de línea" in finding["message"]
+    ) == line_endings_only
 
 
-def test_info_page_requires_base_container(template_files):
-    files = minimal_book(template_files)
-    name = Path("OEBPS/Text/info.xhtml")
-    files[name.as_posix()] = xhtml("Créditos", '<h1 id="epl-nav-1">Créditos</h1>')
-    assert_finding(audit_report(files), "INFO_STRUCTURE", file=name)
-
-
-def test_epl_css_line_ending_change_is_diagnosed(template_files):
-    files = minimal_book(template_files)
-    name = Path("OEBPS/Styles/epl.css")
-    files[name.as_posix()] = files[name.as_posix()].replace(b"\r\n", b"\n")
-    finding = assert_finding(audit_report(files), "EPL_CSS_CHANGED", file=name)[0]
-    assert "solo difiere en finales de línea" in finding["message"]
+@pytest.mark.parametrize("page", ["info", "sinopsis", "dedicatoria"])
+def test_fixed_page_requires_template_container(template_files, page):
+    files = template_files.copy()
+    name = Path(f"OEBPS/Text/{page}.xhtml")
+    files[name.as_posix()] = xhtml("Página fija", "<h1>Encabezado</h1><p>Texto válido.</p>")
+    code = "INFO_STRUCTURE" if page == "info" else "BASE_PAGE_CONTAINER"
+    assert_finding(audit_report(files), code, file=name)
 
 
 def test_missing_manifest_resource(template_files):
@@ -782,6 +789,7 @@ def test_json_valid_book_is_read_only_and_not_certified(
     assert "" == result.stderr
     report = json.loads(result.stdout)
     assert 0 == report["counts"]["error"]
+    assert report["sha256"] == sha256(output.read_bytes()).hexdigest()
     assert not report["compliance_certified"]
     assert before == snapshot(tmp_path)
 
