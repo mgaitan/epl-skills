@@ -23,7 +23,9 @@ import sys
 import uuid
 import zipfile
 from collections import Counter
+from hashlib import file_digest
 from pathlib import Path
+from typing import BinaryIO
 from urllib.parse import unquote, urlsplit
 
 import navigation as nav
@@ -92,8 +94,8 @@ def uri_target(source: str, value: str) -> tuple[str | None, str]:
     return target, unquote(uri.fragment, errors="strict")
 
 
-def read_zip(path: Path) -> tuple[dict[str, bytes], list[zipfile.ZipInfo]]:
-    with zipfile.ZipFile(path) as archive:
+def read_zip(source: Path | BinaryIO) -> tuple[dict[str, bytes], list[zipfile.ZipInfo]]:
+    with zipfile.ZipFile(source) as archive:
         infos = archive.infolist()
         if len(infos) > MAX_FILES or sum(i.file_size for i in infos) > MAX_TOTAL:
             raise ValueError(
@@ -603,43 +605,36 @@ class Audit:
             )
 
     def fixed_pages(self, fields, revision):
+        containers = {
+            "sinopsis.xhtml": "sinopsis",
+            "info.xhtml": "info",
+            "dedicatoria.xhtml": "dedicatoria",
+        }
         for name in self.spine:
             doc = self.documents.get(name)
             if doc is None:
                 continue
             base = Path(name).name
-            if base == "info.xhtml":
-                body = doc.tree.find(f"{{{XHTML}}}body")
-                info_blocks = []
-                if body is not None:
-                    info_blocks = [
-                        e
-                        for e in body.findall(f"{{{XHTML}}}div")
-                        if "info" in e.get("class", "").split()
-                    ]
-                if len(info_blocks) != 1:
+            if cls := containers.get(base):
+                matching = [
+                    element
+                    for element in doc.tree.findall(f"{{{XHTML}}}body/{{{XHTML}}}div")
+                    if cls in element.get("class", "").split()
+                ]
+                paragraphs = (
+                    matching[0].findall(f"{{{XHTML}}}p") if len(matching) == 1 else []
+                )
+                if not paragraphs:
                     self.error(
-                        "INFO_STRUCTURE",
+                        "INFO_STRUCTURE" if base == "info.xhtml" else "BASE_PAGE_CONTAINER",
                         name,
-                        'info.xhtml debe conservar el contenedor <div class="info"> de la base',
+                        f'Conservar un <div class="{cls}"> con párrafos como hijo directo de body, según la base r2.1',
                     )
-            if base == "sinopsis.xhtml":
-                container = next(
-                    (
-                        e
-                        for e in doc.tree.iter()
-                        if "sinopsis" in e.get("class", "").split()
-                    ),
-                    None,
-                )
+                    continue
+                if base != "sinopsis.xhtml":
+                    continue
                 # Las fronteras entre párrafos son espacios; los inline no separan palabras.
-                synopsis = (
-                    compact(
-                        " ".join(text_of(p) for p in container.findall(f"{{{XHTML}}}p"))
-                    )
-                    if container is not None
-                    else ""
-                )
+                synopsis = compact(" ".join(text_of(p) for p in paragraphs))
                 # OPF no admite cursiva: la convención ePL la convierte en comillas.
                 if synopsis != fields["description"]:
                     self.warn(
@@ -899,26 +894,19 @@ class Audit:
 
     def template_checks(self):
         template, _ = read_zip(TEMPLATE)
-        template_css = template["OEBPS/Styles/epl.css"]
+        base_css = template["OEBPS/Styles/epl.css"]
         for name, data in self.files.items():
-            if Path(name).name == "epl.css" and data != template_css:
-                if (
-                    data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
-                    == template_css.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
-                ):
-                    message = (
-                        "epl.css solo difiere en finales de línea (CRLF/LF); "
-                        "restaurar los bytes exactos de la base r2.1"
-                    )
-                else:
-                    message = (
-                        "epl.css difiere byte a byte de la base r2.1 distribuida; "
-                        "restaurar el recurso original"
-                    )
+            if Path(name).name == "epl.css" and data != base_css:
+                detail = (
+                    " Solo cambiaron los finales de línea."
+                    if data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+                    == base_css.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+                    else ""
+                )
                 self.error(
                     "EPL_CSS_CHANGED",
                     name,
-                    message,
+                    f"epl.css difiere de la base r2.1 distribuida.{detail} Restaurar los bytes de la base.",
                 )
             if Path(name).name in ("cover.jpg", "autor.jpg") and data == template.get(
                 "OEBPS/Images/" + Path(name).name
@@ -1106,7 +1094,11 @@ class Audit:
                 },
                 {
                     "code": "OFFICIAL_INI",
-                    "reason": "Los manuales no incluyen el .ini oficial de búsquedas ni el programa ePLValidator",
+                    "reason": "El paquete no incluye el .ini oficial de búsquedas",
+                },
+                {
+                    "code": "EPL_REVIEWER_VALIDATOR",
+                    "reason": "Sin ejecución del validador de candidatura (ePLCombi/ePLValidator)",
                 },
             ]
         )
@@ -1297,9 +1289,13 @@ def main(argv=None) -> int:
             pack(args.directory, args.output)
         else:
             try:
-                files, infos = read_zip(args.book)
+                with args.book.open("rb") as book:
+                    fingerprint = file_digest(book, "sha256").hexdigest()
+                    book.seek(0)
+                    files, infos = read_zip(book)
                 audit = Audit(files, infos)
                 report: dict = audit.run()
+                report["sha256"] = fingerprint
             except (OSError, ValueError, zipfile.BadZipFile, RuntimeError) as exc:
                 report = {
                     "counts": {"error": 1, "warning": 0},
@@ -1353,6 +1349,22 @@ def main(argv=None) -> int:
                             }
                         )
                         report["counts"]["error"] += 1
+            if "sha256" in report:
+                try:
+                    with args.book.open("rb") as book:
+                        unchanged = file_digest(book, "sha256").hexdigest() == fingerprint
+                except OSError:
+                    unchanged = False
+                if not unchanged:
+                    report["findings"].append(
+                        dict(
+                            level="error",
+                            code="INPUT_CHANGED",
+                            file=str(args.book),
+                            message="El EPUB cambió durante la comprobación. Repetir la validación del archivo final.",
+                        )
+                    )
+                    report["counts"]["error"] += 1
             if args.json:
                 print(json.dumps(report, ensure_ascii=False, indent=2))
             else:
@@ -1362,6 +1374,8 @@ def main(argv=None) -> int:
                     )
                 for skipped in report["skipped"]:
                     print(f"PENDIENTE {skipped['code']}: {skipped['reason']}")
+                if "sha256" in report:
+                    print(f"SHA-256: {report['sha256']}  {args.book}")
                 if "epubcheck" in report:
                     print(
                         "EPUBCheck:",

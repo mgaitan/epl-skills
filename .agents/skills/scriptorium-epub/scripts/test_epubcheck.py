@@ -15,6 +15,7 @@ import io
 import json
 import subprocess
 from collections import Counter
+from hashlib import sha256
 from pathlib import Path
 
 import epub
@@ -341,10 +342,24 @@ def test_real_audit_keeps_other_pending_checks(process, capsys):
     assert status == 1  # La plantilla conserva contenido y metadatos de ejemplo.
     assert report["epubcheck"]["returncode"] == 0
     assert "EPUB_SCHEMA" not in {s["code"] for s in report["skipped"]}
-    assert {"NAVIGATION_SEMANTICS", "EDITORIAL_VISUAL", "OFFICIAL_INI"} <= {
+    assert {"NAVIGATION_SEMANTICS", "EDITORIAL_VISUAL", "OFFICIAL_INI", "EPL_REVIEWER_VALIDATOR"} <= {
         s["code"] for s in report["skipped"]
     }
     assert len(process["calls"]) == 1
+
+
+def test_cli_rejects_epub_changed_during_validation(audited_book, jar, capsys, monkeypatch):
+    fingerprint = sha256(audited_book.read_bytes()).hexdigest()
+
+    def save_again(book, _jar):
+        book.write_bytes(book.read_bytes() + b"cambio")
+        return {"completed": True, "returncode": 0}
+
+    monkeypatch.setattr(epub, "run_epubcheck", save_again)
+    status, report = cli_report(audited_book, capsys, "--epubcheck", jar)
+    assert status == 1
+    assert report["sha256"] == fingerprint
+    assert any(f["code"] == "INPUT_CHANGED" for f in report["findings"])
 
 
 if __name__ == "__main__":

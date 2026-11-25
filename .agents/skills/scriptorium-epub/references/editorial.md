@@ -70,17 +70,18 @@ Fuentes: [I-313], [I-3131].
 
 ## 5. Contenido, jerarquía y estilos
 Fuentes: [I-321], [I-322], [I-325].
-- **REQ**: cada capítulo en archivo independiente. **REC** de compatibilidad: cada XHTML no debería superar 300 kB; dividir cuando sea necesario sin perder la estructura lógica.
+- **REQ**: cada capítulo en archivo independiente. [I-321] dice «Cada capítulo debe estar en un archivo distinto». Una parte con capítulos propios no sustituye esa división. **REC** de compatibilidad: cada XHTML no debería superar 300 kB; dividir cuando sea necesario sin perder la estructura lógica.
 - Para obras sin capítulos que excedan ese tamaño, el manual contempla una variante dividida como aporte principal compatible y otra alternativa; no entregar la menos compatible como única versión sin advertencia.
 - **REQ**: ningún XHTML con `body` vacío o solo contenido oculto; puede cerrar el libro en algunos lectores.
 - **REQ** en los archivos de contenido: primer enlace de estilos a `../Styles/epl.css`; segundo a `../Styles/style.css` o a la hoja necesaria para ese XHTML.
-- **REC**: nombres internos reconocibles (`cap01.xhtml`, etc.). **REQ**: sin espacios, acentos ni caracteres extraños. No confundir esta regla con la pauta del nombre externo del EPUB.
+- **REC**: nombres internos reconocibles (`cap01.xhtml`, etc.). [I-321] identifica `Section000n.xhtml` como el nombre automático y dice «los archivos se pueden dejar con esos nombres, pero es aconsejable cambiarlos». **REQ**: sin espacios, acentos ni caracteres extraños. No confundir esta regla con la pauta del nombre externo del EPUB.
 - **REQ**: jerarquía consecutiva desde `h1`, sin saltos: partes/libros/secciones superiores en `h1`; subdivisiones en `h2`, `h3`…; si no hay partes, capítulos en `h1`.
 - Cubierta, título, autor y notas llevan rango `h1`. Usar los encabezados al inicio de las divisiones de contenido, no seleccionar su nivel solo por el tamaño visual deseado.
 - **REC**: usar `title` en el encabezado si el texto de la TOC debe diferir del visible, manteniendo su correlación. Un título multilínea puede combinar encabezado y párrafo de subtítulo.
 - **Opción**: encabezado `class="oculto"` para incluir una división sin título visible. Si se requiere margen superior, aplicar `saltoinicio` al primer párrafo; no dejar una página solo con el encabezado oculto.
 - **REQ**: CSS en hojas externas; prohibidos atributos `style`, bloques `<style>` y estilos autogenerados sin normalizar. Aplicar clases con `class`, preservando el significado del formato que sustituyen.
 - **REQ**: `epl.css` intacto, incluso clases no usadas. Nuevas clases y ajustes en `style.css`; `sgc-toc.css` corresponde al índice HTML y puede personalizarse.
+- **REC**: conservar los estilos aplicables de la base al editar `style.css`. [I-3323] pide adaptar el código de la fuente «en lo posible a las clases ya definidas en el archivo style.css del ePub Base» y crear las clases personales para los demás casos. [I-3324] indica «En style.css: Eliminar los estilos no utilizados (opcional)». [I-345], errores 14–16, aclara que las comprobaciones sobre la hoja obligatoria se refieren a `epl.css` desde la base 2.0.
 - **REC**: espaciamiento vertical en `em`, márgenes laterales en `%`; evitar medidas fijas que no se adapten a fuente y pantalla. Para cambio de escena, preferir `<hr/>` semántico.
 - **REC**: si una combinación de propiedades se repite con significado propio (por ejemplo firmas de cartas), crear una clase común y mantenerla en un solo lugar.
 - **REC** semántica/accesibilidad: `<cite>` para títulos de obras/publicaciones/artes; `<em>` para énfasis del autor; `<dfn>` para término definido; clase de cursiva para decoración.
@@ -180,6 +181,9 @@ Lectura con Python stdlib `zipfile` + `HTMLParser(convert_charrefs=True)`, sin p
 - [I-323] §3.2.3, «Añadir notas al ebook»: `OEBPS/Text/3.2.3.notas.xhtml`.
 - [I-324] §3.2.4, «Tabla de contenido (TOC)»: `OEBPS/Text/3.2.4.TOC.xhtml`.
 - [I-325] §3.2.5, «Código sucio y cómo limpiarlo»: `OEBPS/Text/3.2.5.sucio.xhtml`.
+- [I-3323] §3.3.2.3, errores de maquetación: `OEBPS/Text/3.3.2.3.ErroresMaquetacion.xhtml`.
+- [I-3324] §3.3.2.4, errores ePL: `OEBPS/Text/3.3.2.4.ErroresEPL.xhtml`.
+- [I-345] §3.4.5, códigos de error: `OEBPS/Text/3.4.5.CodigosError.xhtml`.
 - [I-335] §3.3.5, «Números de revisión»: `OEBPS/Text/3.3.5.Revision.xhtml`.
 - [I-41] §4.1, «Cómo nombrar los archivos»: `OEBPS/Text/4.1.NombrarArchivo.xhtml`.
 
