@@ -98,6 +98,7 @@ uv run --script .agents/skills/scriptorium-epub/scripts/epub.py pack trabajo/lib
 uv run --script .agents/skills/scriptorium-epub/scripts/epub.py check trabajo/libro.epub --json
 ```
 
+- Si el revisor exige el flujo de Sigil, úsalo para **regenerar `TOC.xhtml` y reformatear los XHTML**, no solo para validar. Sigue `references/sigil.md`: crea el índice HTML en una copia, guarda, cierra y reabre, ejecuta **Corregir y arreglar código → Todos los archivos HTML** y vuelve a guardar. No sobrescribas ese índice con `navigation.py`. Si no puedes ejecutar Sigil, informa que el paso queda pendiente.
 - `pack` produce un ZIP reproducible con `mimetype` primero y sin comprimir. No valida el contenido ni lo declara terminado.
 - `check` es de **solo lectura**. Informa errores, advertencias, localización/contexto de patrones, controles omitidos y SHA-256 del EPUB comprobado. Las muestras de texto tienen offsets sobre el cuerpo extraído, no líneas del XHTML. Las muestras sobre fuente sí tienen línea. No aplica reemplazos del JSON.
 - Valida el **EPUB exacto que vas a entregar**, después del último guardado en Sigil u otro editor. Registra nombre, revisión y SHA-256 del informe. Si el archivo vuelve a guardarse o cambia su huella, repite el auditor y EPUBCheck. Para una candidatura, registra el resultado de ePLCombi/ePLValidator si está disponible. Si el revisor informa un fallo, coteja el adjunto o su huella y el mensaje exacto del validador antes de atribuirlo a una revisión distinta.
@@ -109,7 +110,7 @@ uv run --script .agents/skills/scriptorium-epub/scripts/epub.py check trabajo/li
 - Se ejecutan 24 búsquedas literales del manual. Dos regex PCRE no son compatibles con `re`; se informan explícitamente como omitidas. No ocultes esta cobertura parcial ni inventes el `.ini` oficial. Las heurísticas adicionales están etiquetadas como locales, no como regex oficiales.
 - Revisa **cada alerta** contra el original antes de corregir. Una alerta no es automáticamente un error: puede coincidir con nombres, códigos u otra grafía literal legítima. Conserva lo confirmado por la fuente y registra la decisión; no persigas cero alertas cambiando el texto. Los 300 kB son un aviso conservador de compatibilidad; los manuales discrepan en alcance/unidad.
 - Completa revisión ortográfica por idioma y cotejo de integridad. Prueba visualmente, al menos, fuente grande, pantalla estrecha, tablas/poemas, pies, SVG, notas ida/vuelta e índice. Solo afirma pruebas en lectores que realmente se hayan realizado.
-- Repite generación de índices, empaquetado y comprobaciones después de corregir. No borres clases de `epl.css` aunque parezcan sin uso.
+- Si cambian los encabezados o los destinos, actualiza los índices; si el flujo exige el índice HTML de Sigil, vuelve a generarlo allí. Reempaqueta cuando sea necesario y repite las comprobaciones. No borres clases de `epl.css` aunque parezcan sin uso.
 
 ## Pruebas de la skill
 
