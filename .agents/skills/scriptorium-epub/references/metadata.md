@@ -19,7 +19,7 @@ Aplicar junto con `editorial.md` §§2, 3 y 8. Perfil: ePub Base r2.1 / EPUB2; n
 | Revisión digital | `dc:date opf:event="modification"` | Fecha de modificación del EPUB, no la de la obra original. Mantener la fecha de firma en `titulo.xhtml` actualizada. |
 | Identidad del libro | `dc:identifier id="BookId" opf:scheme="UUID"` | `urn:uuid:` + UUID propio. `package@unique-identifier="BookId"`; mismo valor en NCX `dtb:uid`. Conservar al revisar el mismo libro. |
 | Ficha ePL | `dc:identifier opf:scheme="EPL"` | ID numérico real de la ficha. No ISBN, no UUID, no `[dev]`, no número inventado. Si falta, omitir campo en borrador y registrar pendiente. |
-| Revisión del libro | `dc:identifier opf:scheme="revision"` | `1.0` en OPF, `r1.0` en archivo, `ePub r1.0` en portadilla. No cambiar el `ePub base r2.1` de créditos. |
+| Revisión del libro | `dc:identifier opf:scheme="revision"` | `0.1` en OPF, `r0.1` en archivo y `ePub r0.1` en portadilla antes de la revisión formal. Aplica el perfil acordado después; para la primera edición final, usa `1.0`/`r1.0`/`ePub r1.0`. No cambiar el `ePub base r2.1` de créditos. |
 | Serie / volumen | `meta name="calibre:series" content="…"`, `meta name="calibre:series_index" content="…"` | Solo si corresponde; ambos coherentes con portadilla. Retirar los valores `Serie`/`1` de muestra si no aplica. |
 | Imagen de portada | `meta name="cover" content="…"` | `content` es **ID del item del manifest**, no una ruta; el item debe apuntar a `Images/cover.jpg` con tipo `image/jpeg`. |
 
@@ -27,13 +27,13 @@ Los créditos de título original, ilustración, cubierta, edición digital y ve
 
 ## Nombre de archivo
 
-**Sin serie ni alias del editor**, la forma de los manuales es:
+**Sin serie ni alias del editor**, adapta la forma de los manuales a la etapa del libro. Antes de la revisión formal:
 
 ```text
-Apellido, Nombre - Titulo [EPL_ID] (r1.0).epub
+Apellido, Nombre - Titulo [EPL_ID] (r0.1).epub
 ```
 
-El ejemplo de la captura del usuario tiene la estructura:
+Ejemplo del mismo formato para una primera edición final:
 
 ```text
 Proust, Marcel - El escandalo Lemoine [85598] (r1.0).epub
@@ -44,7 +44,7 @@ Esto ilustra el formato; no verifica el ID, la revisión o los datos bibliográf
 **Convención local de desarrollo de esta skill**, aceptada para trabajar sin ficha:
 
 ```text
-Apellido, Nombre - Titulo [dev] (r1.0).epub
+Apellido, Nombre - Titulo [dev] (r0.1).epub
 ```
 
 - `[dev]` significa **borrador local**, no campo normalizado ni ID de ePL. No se copia a `dc:identifier opf:scheme="EPL"`.
@@ -52,7 +52,7 @@ Apellido, Nombre - Titulo [dev] (r1.0).epub
 - Antes de una entrega destinada al catálogo, sustituir `[dev]` por el ID real y sincronizar OPF. Preparar localmente no implica subir ni publicar.
 - En el **nombre externo**, transliterar tildes y `ñ` según la pauta del manual; conservar ortografía real dentro del EPUB. No renombrar al usuario ni eliminar tildes del texto.
 - Si hay serie/colección, varios autores, idioma distinto o ediciones anotadas/ilustradas, aplicar variantes de `editorial.md` §8. El alias del editor tras revisión es opcional.
-- `r0.x` es el perfil de candidatura descrito en los manuales, no sinónimo obligatorio de `[dev]`. No afirmar estado de candidatura sin intervención del sitio.
+- `[dev]` indica que falta la ficha; la revisión se elige según la etapa, no según ese marcador. `r0.1` antes de la revisión formal no implica que exista una candidatura en el sitio.
 
 ## Antes de cerrar
 
